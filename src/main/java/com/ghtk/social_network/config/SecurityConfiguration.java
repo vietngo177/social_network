@@ -25,7 +25,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
-public class SecurityConfig {
+public class SecurityConfiguration {
     @Value("${jwt.base64-secret}")
     public String jwtKey;
 
