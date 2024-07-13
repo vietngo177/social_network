@@ -6,6 +6,7 @@ import com.ghtk.social_network.domain.port.spi.UserDatabasePort;
 import com.ghtk.social_network.domain.service.UserServicePortImpl;
 import com.ghtk.social_network.infrastracture.adapter.UserDatabaseAdapter;
 import com.ghtk.social_network.infrastracture.repository.UserRepository;
+import com.ghtk.social_network.util.mapper.RoleMapper;
 import com.ghtk.social_network.util.mapper.UserMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +18,7 @@ public class BeanConfiguration {
         return new UserServicePortImpl(userDatabasePort);
     }
     @Bean
-    public UserDatabasePort userDatabasePort(UserRepository userRepository, UserMapper userMapper){
-        return new UserDatabaseAdapter(userRepository, userMapper);
+    public UserDatabasePort userDatabasePort(UserRepository userRepository, UserMapper userMapper, RoleMapper roleMapper){
+        return new UserDatabaseAdapter(userRepository, userMapper, roleMapper);
     }
 }

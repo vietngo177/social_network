@@ -8,5 +8,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoleDomain {
+    Long roleId;
     String roleName;
 }

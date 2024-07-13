@@ -70,6 +70,9 @@ public class UserEntity {
     @Column(name = "background_image")
     String backgroundImage;
 
+    @Column(columnDefinition = "MEDIUMTEXT")
+    String refreshToken;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();

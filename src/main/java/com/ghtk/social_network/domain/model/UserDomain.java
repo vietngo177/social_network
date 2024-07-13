@@ -28,4 +28,5 @@ public class UserDomain {
     LocalDateTime updatedAt;
     String avatar;
     String backgroundImage;
+    String refreshToken;
 }

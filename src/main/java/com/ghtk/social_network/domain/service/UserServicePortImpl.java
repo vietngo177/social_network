@@ -20,4 +20,19 @@ public class UserServicePortImpl implements UserServicePort {
     public UserDomain createUser(UserDomain userDomain) {
         return userDatabasePort.createUser(userDomain);
     }
+
+    @Override
+    public void updateRefreshToken(String token, String email) {
+        UserDomain currentUser = this.userDatabasePort.findUserByEmail(email);
+        if(currentUser != null){
+            currentUser.setRefreshToken(token);
+            this.userDatabasePort.updateUserRefreshToken(currentUser);
+        }
+
+    }
+
+    @Override
+    public UserDomain findUserByRefreshTokenAndEmail(String token, String email) {
+        return this.userDatabasePort.findUserByRefeshTokenAndEmail(token, email);
+    }
 }
