@@ -16,8 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class BeanConfiguration {
     @Bean
-    public UserServicePort userServicePort(UserDatabasePort userDatabasePort, MailService mailService){
-        return new UserServicePortImpl(userDatabasePort,mailService);
+    public UserServicePort userServicePort(UserDatabasePort userDatabasePort, MailService mailService, PasswordEncoder passwordEncoder){
+        return new UserServicePortImpl(userDatabasePort,mailService, passwordEncoder);
     }
     @Bean
     public UserDatabasePort userDatabasePort(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, PasswordEncoder passwordEncoder){

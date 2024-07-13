@@ -18,7 +18,6 @@ public class UserDatabaseAdapter implements UserDatabasePort {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
-
     @Override
     public void register(User user) {
         UserEntity userEntity = userMapper.toUserEntity(user);
@@ -32,7 +31,6 @@ public class UserDatabaseAdapter implements UserDatabasePort {
     public User findByToken(int token) {
         return userMapper.toUser(userRepository.findByToken(token));
     }
-
 
     @Override
     public User findByUsername(String username) {
@@ -63,7 +61,14 @@ public class UserDatabaseAdapter implements UserDatabasePort {
     }
 
     @Override
-    public User findByEmail(String email) {
+    public void deleteAccount(User user) {
+        UserEntity userEntity = userRepository.findByEmail(user.getEmail());
+        userEntity.setDeleted(true);
+        userRepository.save(userEntity);
+    }
+
+    @Override
+    public UserDomain findUserByEmail(String email) {
         UserEntity userEntity = userRepository.findByEmail(email);
         return userMapper.toUser(userEntity);
     }

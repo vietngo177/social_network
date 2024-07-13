@@ -7,6 +7,8 @@ import com.ghtk.social_network.application.request.RegisterRequest;
 import com.ghtk.social_network.application.response.LoginResponse;
 import com.ghtk.social_network.domain.model.User;
 import com.ghtk.social_network.exception.handler.IdInvalidException;
+import com.ghtk.social_network.exception.handler.IdInvalidException;
+import com.ghtk.social_network.domain.model.UserDomain;
 import com.ghtk.social_network.domain.port.api.UserServicePort;
 import com.ghtk.social_network.util.SecurityUtil;
 import com.ghtk.social_network.util.annotation.ApiMessage;
@@ -51,14 +53,13 @@ public class AuthController {
         // xác thực người dùng => cần viết hàm loadUserByUsername
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         LoginResponse res = new LoginResponse();
         User userCurrentDB = this.userServicePort.findUserByEmail(loginRequest.getEmail());
-        if(userCurrentDB != null){
-            LoginResponse.UserLogin userLogin = new LoginResponse.UserLogin( userCurrentDB.getEmail(),userCurrentDB.getUsername());
+        if (userCurrentDB != null) {
+            LoginResponse.UserLogin userLogin = new LoginResponse.UserLogin(userCurrentDB.getEmail(),
+                    userCurrentDB.getUsername());
             res.setUser(userLogin);
         }
 
@@ -81,7 +82,6 @@ public class AuthController {
                 .maxAge(864000)
                 .build();
 
-
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                 .body(res);
@@ -89,14 +89,13 @@ public class AuthController {
 
     @GetMapping("/account")
     @ApiMessage("fetch account")
-    public ResponseEntity<LoginResponse.UserGetAccount> getAccount(){
-        String email = SecurityUtil.getCurrentUserLogin().isPresent() ?
-         SecurityUtil.getCurrentUserLogin().get() : "";
+    public ResponseEntity<LoginResponse.UserGetAccount> getAccount() {
+        String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
 
         User userCurrentDB = this.userServicePort.findUserByEmail(email);
         LoginResponse.UserLogin userLogin = new LoginResponse.UserLogin();
         LoginResponse.UserGetAccount userGetAccount = new LoginResponse.UserGetAccount(userLogin);
-        if(userCurrentDB != null){
+        if (userCurrentDB != null) {
             userLogin.setEmail(email);
             userLogin.setUsername(userCurrentDB.getUsername());
             userGetAccount.setUserLogin(userLogin);
@@ -108,26 +107,27 @@ public class AuthController {
     @GetMapping("/refresh")
     @ApiMessage("Get user by refresh token")
     public ResponseEntity<LoginResponse> getRefreshToken(
-            @CookieValue(name = "refresh_token", defaultValue = "refresh_token_default") String refresh_token
-    ) throws IdInvalidException {
-        if(refresh_token.equals("refresh_token_default")){
+            @CookieValue(name = "refresh_token", defaultValue = "refresh_token_default") String refresh_token)
+            throws IdInvalidException {
+        if (refresh_token.equals("refresh_token_default")) {
             throw new IdInvalidException("Ban khong co refresh token trong cookies");
         }
 
         // check valid
-        Jwt decodedToken =  this.securityUtil.checkValidRefreshToken(refresh_token);
+        Jwt decodedToken = this.securityUtil.checkValidRefreshToken(refresh_token);
         String email = decodedToken.getSubject();
 
         // check user by refreshtoken and email
-        User currentUser = this.userServicePort.findUserByRefreshTokenAndEmail(refresh_token,email);
-        if(currentUser == null){
+        User currentUser = this.userServicePort.findUserByRefreshTokenAndEmail(refresh_token, email);
+        if (currentUser == null) {
             throw new IdInvalidException("Refresh token khong hop le");
         }
 
         LoginResponse res = new LoginResponse();
         User userCurrentDB = this.userServicePort.findUserByEmail(email);
-        if(userCurrentDB != null){
-            LoginResponse.UserLogin userLogin = new LoginResponse.UserLogin( userCurrentDB.getEmail(),userCurrentDB.getUsername());
+        if (userCurrentDB != null) {
+            LoginResponse.UserLogin userLogin = new LoginResponse.UserLogin(userCurrentDB.getEmail(),
+                    userCurrentDB.getUsername());
             res.setUser(userLogin);
         }
 
@@ -150,7 +150,6 @@ public class AuthController {
                 .maxAge(864000)
                 .build();
 
-
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                 .body(res);
@@ -159,19 +158,18 @@ public class AuthController {
     @PostMapping("/logout")
     @ApiMessage("Logout UserEntity")
     public ResponseEntity<Void> logout() throws IdInvalidException {
-        String email = SecurityUtil.getCurrentUserLogin().isPresent() ?
-                SecurityUtil.getCurrentUserLogin().get() : "";
+        String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
 
-        if(email.equals("")){
+        if (email.equals("")) {
             throw new IdInvalidException("Access token khong hop le");
         }
 
         // update refresh token
-        this.userServicePort.updateRefreshToken(null,email);
+        this.userServicePort.updateRefreshToken(null, email);
 
         // remove refresh token from cookies
         ResponseCookie deleteCookies = ResponseCookie
-                .from("refresh_token",null)
+                .from("refresh_token", null)
                 .httpOnly(true)
                 .secure(true)
                 .path("/")
@@ -183,7 +181,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@Valid @RequestBody RegisterRequest user, HttpServletRequest request) throws MessagingException {
+    public ResponseEntity<String> registerUser(@Valid @RequestBody RegisterRequest user, HttpServletRequest request)
+            throws MessagingException {
         userServicePort.register(Utility.getSiteURL(request), userMapper.toUser(user));
         return ResponseEntity.ok().body("Please check your email to confirm your account.");
     }
@@ -194,13 +193,14 @@ public class AuthController {
     }
 
     @PostMapping("/forgot_password")
-    public ResponseEntity<String> forgotPassword(HttpServletRequest request, @RequestBody ForgotPasswordRequest forgotPasswordRequest) throws MessagingException {
+    public ResponseEntity<String> forgotPassword(HttpServletRequest request,
+            @RequestBody ForgotPasswordRequest forgotPasswordRequest) throws MessagingException {
         String result = userServicePort.forgotPassword(Utility.getSiteURL(request), forgotPasswordRequest.getEmail());
         return ResponseEntity.ok().body(result);
     }
 
     @PostMapping("/forgot_password/confirm_request/{token}")
-    public ResponseEntity<Void> confirmPassword(@PathVariable int token){
+    public ResponseEntity<Void> confirmPassword(@PathVariable int token) {
         userServicePort.confirmForgotPasswordToken(token);
         ResponseCookie responseCookie = ResponseCookie
                 .from("confirm_password", String.valueOf(token))
@@ -215,11 +215,12 @@ public class AuthController {
     }
 
     @PostMapping("/forgot_password/create_password")
-    public ResponseEntity<String> createPassword(@CookieValue(value = "confirm_password") String token,@RequestBody CreateNewPasswordRequest createNewPasswordRequest){
-        if(!createNewPasswordRequest.getPassword().equals(createNewPasswordRequest.getConfirmPassword()))
+    public ResponseEntity<String> createPassword(@CookieValue(value = "confirm_password") String token,
+            @RequestBody CreateNewPasswordRequest createNewPasswordRequest) {
+        if (!createNewPasswordRequest.getPassword().equals(createNewPasswordRequest.getConfirmPassword()))
             throw new RuntimeException("Re-enter password does not match");
         ResponseCookie deleteCookies = ResponseCookie
-                .from("confirm_password",null)
+                .from("confirm_password", null)
                 .httpOnly(true)
                 .secure(true)
                 .path("/")
@@ -227,6 +228,7 @@ public class AuthController {
                 .build();
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, deleteCookies.toString())
-                .body(userServicePort.createNewPassword(createNewPasswordRequest.getPassword(), Integer.parseInt(token)));
+                .body(userServicePort.createNewPassword(createNewPasswordRequest.getPassword(),
+                        Integer.parseInt(token)));
     }
 }

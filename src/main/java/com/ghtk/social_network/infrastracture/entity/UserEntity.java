@@ -33,7 +33,6 @@ public class UserEntity {
     @Column(name = "first_name")
     private String firstName;
 
-
     @Column(name = "date_of_birth")
     LocalDate dateOfBirth;
 
@@ -46,7 +45,7 @@ public class UserEntity {
     @Column(name = "visibility")
     private Visibility visibility;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinColumn(name = "role_id")
     private RoleEntity roleEntity;
 
@@ -71,7 +70,6 @@ public class UserEntity {
     @Column(name = "avatar")
     private String avatar;
 
-
     @Column(name = "background_image")
     private String backgroundImage;
 
@@ -80,11 +78,16 @@ public class UserEntity {
 
     @Column(name = "token")
     private Integer token;
+    @Column(name = "is_deleted")
+    boolean isDeleted;
+
+    int token;
+    boolean enabled;
 
     @Column(name = "enable")
     private boolean enable;
 
-        @PrePersist
+    @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
