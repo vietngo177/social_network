@@ -2,6 +2,7 @@ package com.ghtk.social_network.application.exception;
 
 import com.ghtk.social_network.application.response.RestResponse;
 import com.ghtk.social_network.domain.exception.IdInvalidException;
+import com.ghtk.social_network.domain.exception.PasswordException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,6 +25,17 @@ public class GlobalException {
             RuntimeException.class
     })
     public ResponseEntity<RestResponse<Object>> handleException(Exception ex) {
+        RestResponse<Object> res = new RestResponse<>();
+        res.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        res.setError(ex.getMessage());
+        res.setMessage("Exception occurs... ");
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
+    }
+
+
+    @ExceptionHandler(value = {PasswordException.class})
+    public ResponseEntity<RestResponse<Object>> handlingPasswordException(PasswordException ex) {
         RestResponse<Object> res = new RestResponse<>();
         res.setStatusCode(HttpStatus.BAD_REQUEST.value());
         res.setError(ex.getMessage());

@@ -23,5 +23,6 @@ public interface UserDatabasePort {
     void updateToken(User user);
 
     void updatePassword(User user);
+    void deleteAccount(User user);
 }
 

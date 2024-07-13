@@ -27,6 +27,7 @@ public class UserDatabaseAdapter implements UserDatabasePort {
         UserEntity userEntity = userMapper1.toUserEntity(user);
         RoleEntity role = roleRepository.findByRoleName(user.getRole());
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+        userEntity.setDeleted(false);
         if(role == null) role = new RoleEntity(Role.USER);
         userEntity.setRole(role);
         userRepository.save(userEntity);
@@ -67,6 +68,13 @@ public class UserDatabaseAdapter implements UserDatabasePort {
         UserEntity userEntity = userRepository.findByEmail(user.getEmail());
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         userEntity.setToken(0);
+        userRepository.save(userEntity);
+    }
+
+    @Override
+    public void deleteAccount(User user) {
+        UserEntity userEntity = userRepository.findByEmail(user.getEmail());
+        userEntity.setDeleted(true);
         userRepository.save(userEntity);
     }
 

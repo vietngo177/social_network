@@ -78,6 +78,9 @@ public class UserEntity {
     @Column(columnDefinition = "MEDIUMTEXT")
     String refreshToken;
 
+    @Column(name = "is_deleted")
+    boolean isDeleted;
+
     int token;
     boolean enabled;
 

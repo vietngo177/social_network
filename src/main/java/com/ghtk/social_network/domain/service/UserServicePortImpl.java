@@ -1,5 +1,7 @@
 package com.ghtk.social_network.domain.service;
 
+import com.ghtk.social_network.application.request.ChangePasswordRequest;
+import com.ghtk.social_network.domain.exception.PasswordException;
 import com.ghtk.social_network.domain.model.Role;
 import com.ghtk.social_network.domain.model.User;
 import com.ghtk.social_network.domain.model.UserDomain;
@@ -8,6 +10,7 @@ import com.ghtk.social_network.domain.port.spi.UserDatabasePort;
 import com.ghtk.social_network.util.MailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.SendFailedException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Random;
 
@@ -15,9 +18,12 @@ public class UserServicePortImpl implements UserServicePort {
     final private UserDatabasePort userDatabasePort;
     final private MailService mailService;
 
-    public UserServicePortImpl(UserDatabasePort userDatabasePort, MailService mailService) {
+    final private PasswordEncoder passwordEncoder;
+
+    public UserServicePortImpl(UserDatabasePort userDatabasePort, MailService mailService, PasswordEncoder passwordEncoder) {
         this.userDatabasePort = userDatabasePort;
         this.mailService = mailService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -64,6 +70,31 @@ public class UserServicePortImpl implements UserServicePort {
         userDatabasePort.updatePassword(user);
         return "User successfully change password";
     }
+
+    @Override
+    public String changePassword(String email, ChangePasswordRequest changePasswordRequest) throws SendFailedException, PasswordException {
+        User user = userDatabasePort.findByEmail(email);
+        if (user == null) throw new SendFailedException("Invalid email or email does not exist");
+
+        if(passwordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword())) {
+            user.setPassword(changePasswordRequest.getNewPassword());
+            userDatabasePort.updatePassword(user);
+        } else {
+            throw new PasswordException("Old password is incorrect");
+        }
+
+        return "Changed password successfully";
+    }
+
+    @Override
+    public String deleteAccount(String email) throws SendFailedException {
+        User user = userDatabasePort.findByEmail(email);
+        if (user == null) throw new SendFailedException("Invalid email or email does not exist");
+        userDatabasePort.deleteAccount(user);
+
+        return "Deleted account successfully";
+    }
+
     @Override
     public UserDomain findUserByEmail(String email) {
         return userDatabasePort.findUserByEmail(email);
