@@ -20,5 +20,8 @@ public interface UserDatabasePort {
 
     void updateRegisterUser(User user);
 
+    void updateToken(User user);
+
+    void updatePassword(User user);
 }
 

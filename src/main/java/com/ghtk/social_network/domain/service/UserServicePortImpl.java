@@ -51,7 +51,7 @@ public class UserServicePortImpl implements UserServicePort {
         if (user == null) throw new SendFailedException("Invalid email or email does not exist");
         String link = url + "/api/v1/forgot_password/confirm_password/" + token;
         user.setToken(token);
-        userDatabasePort.register(user);
+        userDatabasePort.updateToken(user);
         mailService.sendMailRegister(email, link);
         return "Please check your email to change your password.";
     }
@@ -61,7 +61,7 @@ public class UserServicePortImpl implements UserServicePort {
         User user = userDatabasePort.findByToken(token);
         if (user == null) throw new RuntimeException("Error happened");
         user.setPassword(password);
-        userDatabasePort.register(user);
+        userDatabasePort.updatePassword(user);
         return "User successfully change password";
     }
     @Override
@@ -82,7 +82,6 @@ public class UserServicePortImpl implements UserServicePort {
             currentUser.setRefreshToken(token);
             this.userDatabasePort.updateUserRefreshToken(currentUser);
         }
-
     }
 
     @Override

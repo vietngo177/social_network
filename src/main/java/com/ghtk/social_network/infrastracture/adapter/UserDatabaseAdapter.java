@@ -56,6 +56,21 @@ public class UserDatabaseAdapter implements UserDatabasePort {
     }
 
     @Override
+    public void updateToken(User user) {
+        UserEntity userEntity = userRepository.findByEmail(user.getEmail());
+        userEntity.setToken(user.getToken());
+        userRepository.save(userEntity);
+    }
+
+    @Override
+    public void updatePassword(User user) {
+        UserEntity userEntity = userRepository.findByEmail(user.getEmail());
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+        userEntity.setToken(0);
+        userRepository.save(userEntity);
+    }
+
+    @Override
     public UserDomain findUserByEmail(String email) {
         UserEntity userEntity = userRepository.findByEmail(email);
 
