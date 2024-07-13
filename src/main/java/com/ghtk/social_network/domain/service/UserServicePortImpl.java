@@ -1,8 +1,7 @@
 package com.ghtk.social_network.domain.service;
 
-import com.ghtk.social_network.domain.model.Role;
+import com.ghtk.social_network.util.constant.Role;
 import com.ghtk.social_network.domain.model.User;
-import com.ghtk.social_network.domain.model.UserDomain;
 import com.ghtk.social_network.domain.port.api.UserServicePort;
 import com.ghtk.social_network.domain.port.spi.UserDatabasePort;
 import com.ghtk.social_network.util.MailService;
@@ -62,22 +61,22 @@ public class UserServicePortImpl implements UserServicePort {
         if (user == null) throw new RuntimeException("Error happened");
         user.setPassword(password);
         userDatabasePort.updatePassword(user);
-        return "User successfully change password";
+        return "UserEntity successfully change password";
     }
     @Override
-    public UserDomain findUserByEmail(String email) {
+    public User findUserByEmail(String email) {
         return userDatabasePort.findUserByEmail(email);
     }
 
 
     @Override
-    public UserDomain createUser(UserDomain userDomain) {
-        return userDatabasePort.createUser(userDomain);
+    public User createUser(User User) {
+        return userDatabasePort.createUser(User);
     }
 
     @Override
     public void updateRefreshToken(String token, String email) {
-        UserDomain currentUser = this.userDatabasePort.findUserByEmail(email);
+        User currentUser = this.userDatabasePort.findUserByEmail(email);
         if(currentUser != null){
             currentUser.setRefreshToken(token);
             this.userDatabasePort.updateUserRefreshToken(currentUser);
@@ -85,7 +84,7 @@ public class UserServicePortImpl implements UserServicePort {
     }
 
     @Override
-    public UserDomain findUserByRefreshTokenAndEmail(String token, String email) {
+    public User findUserByRefreshTokenAndEmail(String token, String email) {
         return this.userDatabasePort.findUserByRefeshTokenAndEmail(token, email);
     }
 

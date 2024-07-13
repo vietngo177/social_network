@@ -3,7 +3,7 @@ package com.ghtk.social_network.application.controller;
 import com.ghtk.social_network.application.request.LoginRequest;
 import com.ghtk.social_network.application.request.RegisterRequest;
 import com.ghtk.social_network.domain.port.api.UserServicePort;
-import com.ghtk.social_network.util.mapper.UserMapper1;
+import com.ghtk.social_network.util.mapper.UserMapper;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1")
 public class UserController {
     private final UserServicePort  userServicePort;
-    private final UserMapper1 userMapper1;
+    private final UserMapper userMapper;
 
     public static class Utility {
         public static String getSiteURL(HttpServletRequest request) {
@@ -23,14 +23,14 @@ public class UserController {
         }
     }
 
-    public UserController(UserServicePort userServicePort, UserMapper1 userMapper1) {
+    public UserController(UserServicePort userServicePort, UserMapper userMapper) {
         this.userServicePort = userServicePort;
-        this.userMapper1 = userMapper1;
+        this.userMapper = userMapper;
     }
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@Valid @RequestBody RegisterRequest user, HttpServletRequest request) throws MessagingException {
-        userServicePort.register(Utility.getSiteURL(request), userMapper1.toUser(user));
+        userServicePort.register(Utility.getSiteURL(request), userMapper.toUser(user));
         return ResponseEntity.ok().body("Please check your email to confirm your account.");
     }
 

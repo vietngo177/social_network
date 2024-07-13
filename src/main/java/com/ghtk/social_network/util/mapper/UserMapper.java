@@ -1,24 +1,17 @@
 package com.ghtk.social_network.util.mapper;
 
-import com.ghtk.social_network.domain.model.UserDomain;
+import com.ghtk.social_network.application.request.RegisterRequest;
+import com.ghtk.social_network.util.constant.Role;
+import com.ghtk.social_network.domain.model.User;
+import com.ghtk.social_network.infrastracture.entity.RoleEntity;
 import com.ghtk.social_network.infrastracture.entity.UserEntity;
-import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
 
-@Component
-@RequiredArgsConstructor
-public class UserMapper {
-    private final ModelMapper modelMapper;
-    public UserDomain toUserDomain(UserEntity userEntity){
-        UserDomain userDomain = this.modelMapper.map(userEntity, UserDomain.class);
-        return userDomain;
-    }
+@Mapper(componentModel = "spring")
+public interface UserMapper {
+    User toUser(RegisterRequest registerRequest);
 
-    public UserEntity toUserEntity(UserDomain userDomain){
-        UserEntity userEntity = this.modelMapper.map(userDomain, UserEntity.class);
-        return userEntity;
-    }
+    User toUser(UserEntity userEntity);
 
-
+    UserEntity toUserEntity(User user);
 }

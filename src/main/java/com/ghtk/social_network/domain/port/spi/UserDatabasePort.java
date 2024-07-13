@@ -2,14 +2,13 @@ package com.ghtk.social_network.domain.port.spi;
 
 
 import com.ghtk.social_network.domain.model.User;
-import com.ghtk.social_network.domain.model.UserDomain;
 
 public interface UserDatabasePort {
-    UserDomain findUserByEmail(String email);
-    UserDomain createUser(UserDomain userDomain);
-    UserDomain updateUserRefreshToken(UserDomain userDomain);
+    User findUserByEmail(String email);
+    User createUser(User User);
+    User updateUserRefreshToken(User User);
 
-    UserDomain findUserByRefeshTokenAndEmail(String token, String email);
+    User findUserByRefeshTokenAndEmail(String token, String email);
     void register(User user);
 
     User findByToken(int token);

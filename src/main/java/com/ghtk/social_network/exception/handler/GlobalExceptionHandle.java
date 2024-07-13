@@ -1,6 +1,7 @@
 package com.ghtk.social_network.exception.handler;
 
 import com.ghtk.social_network.application.response.RestResponse;
+import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,8 +19,11 @@ import java.util.List;
 public class GlobalExceptionHandle {
 
     @ExceptionHandler(value = {
+            Exception.class,
             UsernameNotFoundException.class,
-            BadCredentialsException.class
+            BadCredentialsException.class,
+            IdInvalidException.class,
+            ValidationException.class
     })
     public ResponseEntity<RestResponse<Object>> handleException(Exception ex) {
         RestResponse<Object> er = new RestResponse<Object>();

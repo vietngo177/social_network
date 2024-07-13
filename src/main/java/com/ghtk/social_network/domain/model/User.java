@@ -1,9 +1,13 @@
 package com.ghtk.social_network.domain.model;
 
+import com.ghtk.social_network.util.constant.Gender;
+import com.ghtk.social_network.util.constant.Role;
+import com.ghtk.social_network.util.constant.Visibility;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -23,6 +27,10 @@ public class User {
     String education;
     String avatar;
     String backgroundImage;
+    String refreshToken;
+    Visibility visibility;
     int token;
     boolean enabled;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }

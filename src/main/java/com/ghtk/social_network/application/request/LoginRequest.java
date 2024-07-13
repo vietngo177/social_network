@@ -4,18 +4,18 @@ import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 
 public class LoginRequest {
-//    @NotBlank(message = "username khong duoc de trong")
-    private String username;
+    @NotBlank(message = "email khong duoc de trong")
+    private String email;
 
     @NotBlank(message = "password khong duoc de trong")
     private String password;
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String username) {
+        this.email = email;
     }
 
     public String getPassword() {

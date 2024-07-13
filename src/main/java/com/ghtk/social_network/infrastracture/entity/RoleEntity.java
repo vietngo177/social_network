@@ -1,31 +1,22 @@
 package com.ghtk.social_network.infrastracture.entity;
 
-import com.ghtk.social_network.domain.model.Role;
+import com.ghtk.social_network.util.constant.Role;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import jakarta.validation.constraints.Size;
+import lombok.*;
 
-@Entity
-@Table(name = "roles")
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-
+@Entity
+@Table(name = "roles")
 public class RoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id", nullable = false)
-    Long roleId;
+    private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role_name", nullable = false)
-    Role roleName;
-
-    public RoleEntity(Role roleName) {
-        this.roleName = roleName;
-    }
+    @Column(name = "name")
+    private String name;
 }

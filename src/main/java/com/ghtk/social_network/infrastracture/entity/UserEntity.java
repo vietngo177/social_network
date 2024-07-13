@@ -1,87 +1,90 @@
 package com.ghtk.social_network.infrastracture.entity;
 
+import com.ghtk.social_network.util.constant.Gender;
 import com.ghtk.social_network.util.constant.Visibility;
-import com.ghtk.social_network.domain.model.Gender;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import jakarta.validation.constraints.Size;
+import lombok.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "users")
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@Data
+@Entity
+@Table(name = "users")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    Long userId;
+    @Column(name = "user_id", nullable = false)
+    private Long id;
 
-    @Column(name = "username", nullable = false, unique = true)
-    String username;
+    @Column(name = "username")
+    private String username;
 
-    @Column(name = "email", nullable = false, unique = true)
-    String email;
+    @Column(name = "email")
+    private String email;
 
-    @Column(name = "password", nullable = false)
-    String password;
+    @Column(name = "password")
+    private String password;
 
-    @Column(name = "first_name", nullable = false)
-    String firstName;
+    @Column(name = "first_name")
+    private String firstName;
 
-    @Column(name = "last_name", nullable = false)
-    String lastName;
+
+    @Column(name = "date_of_birth")
+    LocalDate dateOfBirth;
 
     @Enumerated(EnumType.STRING)
     Gender gender;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "visibility")
-    Visibility visibility;
+    @Column(name = "last_name")
+    private String lastName;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "role_id", nullable = false)
-    RoleEntity role;
+    @Column(name = "visibility")
+    private Visibility visibility;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "role_id")
+    private RoleEntity roleEntity;
 
     @Column(name = "bio")
-    String bio;
+    private String bio;
 
     @Column(name = "location")
-    String location;
+    private String location;
 
     @Column(name = "work")
-    String work;
+    private String work;
 
     @Column(name = "education")
-    String education;
+    private String education;
 
-    @Column(name = "created_at", nullable = false)
-    LocalDateTime createdAt;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
 
     @Column(name = "avatar")
-    String avatar;
+    private String avatar;
+
 
     @Column(name = "background_image")
-    String backgroundImage;
-    @Column(name = "date_of_birth")
-    LocalDate dateOfBirth;
+    private String backgroundImage;
 
-    @Column(columnDefinition = "MEDIUMTEXT")
-    String refreshToken;
+    @Column(name = "refresh_token")
+    private String refreshToken;
 
-    int token;
-    boolean enabled;
+    @Column(name = "token")
+    private Integer token;
 
-    @PrePersist
+    @Column(name = "enable")
+    private boolean enable;
+
+        @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
@@ -90,6 +93,5 @@ public class UserEntity {
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
 }
-
-

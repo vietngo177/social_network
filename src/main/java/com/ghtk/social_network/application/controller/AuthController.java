@@ -2,11 +2,9 @@ package com.ghtk.social_network.application.controller;
 
 import com.ghtk.social_network.application.request.LoginRequest;
 import com.ghtk.social_network.application.response.LoginResponse;
-import com.ghtk.social_network.application.response.RestResponse;
-import com.ghtk.social_network.domain.exception.IdInvalidException;
-import com.ghtk.social_network.domain.model.UserDomain;
+import com.ghtk.social_network.domain.model.User;
+import com.ghtk.social_network.exception.handler.IdInvalidException;
 import com.ghtk.social_network.domain.port.api.UserServicePort;
-import com.ghtk.social_network.infrastracture.entity.UserEntity;
 import com.ghtk.social_network.util.SecurityUtil;
 import com.ghtk.social_network.util.annotation.ApiMessage;
 import jakarta.validation.Valid;
@@ -34,7 +32,7 @@ public class AuthController {
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         // Nạp input gồm username/password vào Security
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                loginRequest.getUsername(), loginRequest.getPassword());
+                loginRequest.getEmail(), loginRequest.getPassword());
 
         // xác thực người dùng => cần viết hàm loadUserByUsername
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
@@ -44,7 +42,7 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         LoginResponse res = new LoginResponse();
-        UserDomain userCurrentDB = this.userServicePort.findUserByEmail(loginRequest.getUsername());
+        User userCurrentDB = this.userServicePort.findUserByEmail(loginRequest.getEmail());
         if(userCurrentDB != null){
             LoginResponse.UserLogin userLogin = new LoginResponse.UserLogin( userCurrentDB.getEmail(),userCurrentDB.getUsername());
             res.setUser(userLogin);
@@ -55,10 +53,10 @@ public class AuthController {
         res.setAccessToken(access_token);
 
         // Create refresh token
-        String refreshToken = this.securityUtil.createRefreshToken(loginRequest.getUsername(), res);
+        String refreshToken = this.securityUtil.createRefreshToken(loginRequest.getEmail(), res);
 
         // Update user
-        this.userServicePort.updateRefreshToken(refreshToken, loginRequest.getUsername());
+        this.userServicePort.updateRefreshToken(refreshToken, loginRequest.getEmail());
 
         // set cookies
         ResponseCookie responseCookie = ResponseCookie
@@ -81,7 +79,7 @@ public class AuthController {
         String email = SecurityUtil.getCurrentUserLogin().isPresent() ?
          SecurityUtil.getCurrentUserLogin().get() : "";
 
-        UserDomain userCurrentDB = this.userServicePort.findUserByEmail(email);
+        User userCurrentDB = this.userServicePort.findUserByEmail(email);
         LoginResponse.UserLogin userLogin = new LoginResponse.UserLogin();
         LoginResponse.UserGetAccount userGetAccount = new LoginResponse.UserGetAccount(userLogin);
         if(userCurrentDB != null){
@@ -107,13 +105,13 @@ public class AuthController {
         String email = decodedToken.getSubject();
 
         // check user by refreshtoken and email
-        UserDomain currentUser = this.userServicePort.findUserByRefreshTokenAndEmail(refresh_token,email);
+        User currentUser = this.userServicePort.findUserByRefreshTokenAndEmail(refresh_token,email);
         if(currentUser == null){
             throw new IdInvalidException("Refresh token khong hop le");
         }
 
         LoginResponse res = new LoginResponse();
-        UserDomain userCurrentDB = this.userServicePort.findUserByEmail(email);
+        User userCurrentDB = this.userServicePort.findUserByEmail(email);
         if(userCurrentDB != null){
             LoginResponse.UserLogin userLogin = new LoginResponse.UserLogin( userCurrentDB.getEmail(),userCurrentDB.getUsername());
             res.setUser(userLogin);
@@ -145,7 +143,7 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    @ApiMessage("Logout User")
+    @ApiMessage("Logout UserEntity")
     public ResponseEntity<Void> logout() throws IdInvalidException {
         String email = SecurityUtil.getCurrentUserLogin().isPresent() ?
                 SecurityUtil.getCurrentUserLogin().get() : "";

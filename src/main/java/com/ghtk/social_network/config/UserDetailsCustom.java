@@ -1,6 +1,6 @@
 package com.ghtk.social_network.config;
 
-import com.ghtk.social_network.domain.model.UserDomain;
+import com.ghtk.social_network.domain.model.User;
 import com.ghtk.social_network.domain.port.api.UserServicePort;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +21,7 @@ public class UserDetailsCustom implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDomain user = this.userService.findUserByEmail(username);
+        User user = this.userService.findUserByEmail(username);
         System.out.println(user);
 
         if (user == null) {
