@@ -41,7 +41,7 @@ public class SecurityConfiguration {
                 .csrf(c -> c.disable())
                 .authorizeHttpRequests(
                         authz -> authz
-                                .requestMatchers("/", "/api/v1/auth/login","/api/v1/auth/refresh","/api/v1/register/**","/api/v1/forgot_password/**","/api/v1/confirm_password/**").permitAll()
+                                .requestMatchers("/", "/api/v1/auth/login","/api/v1/auth/refresh","/api/v1/auth/register/**","/api/v1/auth/forgot_password/**").permitAll()
                                 .anyRequest().authenticated())
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
                         .authenticationEntryPoint(customAuthenticationEntryPoint))

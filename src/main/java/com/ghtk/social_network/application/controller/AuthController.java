@@ -1,12 +1,18 @@
 package com.ghtk.social_network.application.controller;
 
+import com.ghtk.social_network.application.request.CreateNewPasswordRequest;
+import com.ghtk.social_network.application.request.ForgotPasswordRequest;
 import com.ghtk.social_network.application.request.LoginRequest;
+import com.ghtk.social_network.application.request.RegisterRequest;
 import com.ghtk.social_network.application.response.LoginResponse;
 import com.ghtk.social_network.domain.model.User;
 import com.ghtk.social_network.exception.handler.IdInvalidException;
 import com.ghtk.social_network.domain.port.api.UserServicePort;
 import com.ghtk.social_network.util.SecurityUtil;
 import com.ghtk.social_network.util.annotation.ApiMessage;
+import com.ghtk.social_network.util.mapper.UserMapper;
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +33,14 @@ public class AuthController {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final SecurityUtil securityUtil;
     private final UserServicePort userServicePort;
+    private final UserMapper userMapper;
+
+    public static class Utility {
+        public static String getSiteURL(HttpServletRequest request) {
+            String siteURL = request.getRequestURL().toString();
+            return siteURL.replace(request.getServletPath(), "");
+        }
+    }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
@@ -168,5 +182,51 @@ public class AuthController {
                 .body(null);
     }
 
+    @PostMapping("/register")
+    public ResponseEntity<String> registerUser(@Valid @RequestBody RegisterRequest user, HttpServletRequest request) throws MessagingException {
+        userServicePort.register(Utility.getSiteURL(request), userMapper.toUser(user));
+        return ResponseEntity.ok().body("Please check your email to confirm your account.");
+    }
 
+    @GetMapping("/register/confirm_register/{token}")
+    public ResponseEntity<String> confirmToken(@PathVariable int token) {
+        return ResponseEntity.ok().body(userServicePort.confirmRegister(token));
+    }
+
+    @PostMapping("/forgot_password")
+    public ResponseEntity<String> forgotPassword(HttpServletRequest request, @RequestBody ForgotPasswordRequest forgotPasswordRequest) throws MessagingException {
+        String result = userServicePort.forgotPassword(Utility.getSiteURL(request), forgotPasswordRequest.getEmail());
+        return ResponseEntity.ok().body(result);
+    }
+
+    @PostMapping("/forgot_password/confirm_password/{token}")
+    public ResponseEntity<Void> confirmPassword(@PathVariable int token){
+        userServicePort.confirmForgotPasswordToken(token);
+        ResponseCookie responseCookie = ResponseCookie
+                .from("confirm_password", String.valueOf(token))
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(864000)
+                .build();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .build();
+    }
+
+    @PostMapping("/forgot_password/create_password")
+    public ResponseEntity<String> createPassword(@CookieValue(value = "confirm_password") String token,@RequestBody CreateNewPasswordRequest createNewPasswordRequest){
+        if(!createNewPasswordRequest.getPassword().equals(createNewPasswordRequest.getConfirmPassword()))
+            throw new RuntimeException("Re-enter password does not match");
+        ResponseCookie deleteCookies = ResponseCookie
+                .from("confirm_password",null)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(0)
+                .build();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, deleteCookies.toString())
+                .body(userServicePort.createNewPassword(createNewPasswordRequest.getPassword(), Integer.parseInt(token)));
+    }
 }

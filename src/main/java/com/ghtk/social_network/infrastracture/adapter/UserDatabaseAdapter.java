@@ -33,10 +33,6 @@ public class UserDatabaseAdapter implements UserDatabasePort {
         return userMapper.toUser(userRepository.findByToken(token));
     }
 
-    @Override
-    public User findByEmail(String email) {
-        return userMapper.toUser(userRepository.findByEmail(email));
-    }
 
     @Override
     public User findByUsername(String username) {
@@ -67,29 +63,21 @@ public class UserDatabaseAdapter implements UserDatabasePort {
     }
 
     @Override
-    public User findUserByEmail(String email) {
+    public User findByEmail(String email) {
         UserEntity userEntity = userRepository.findByEmail(email);
         return userMapper.toUser(userEntity);
-    }
-
-    @Override
-    public User createUser(User User) {
-        return null;
     }
 
     @Override
     public User updateUserRefreshToken(User User) {
         UserEntity userEntity = userRepository.findByEmail(User.getEmail());
         userEntity.setRefreshToken(User.getRefreshToken());
-
         UserEntity userEntity1 = userRepository.save(userEntity);
-
         return userMapper.toUser(userEntity);
     }
 
     @Override
     public User findUserByRefeshTokenAndEmail(String token, String email) {
         return userMapper.toUser(userRepository.findByRefreshTokenAndEmail(token, email));
-
     }
 }

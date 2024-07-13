@@ -25,7 +25,7 @@ public class UserServicePortImpl implements UserServicePort {
         if(userDatabasePort.findByUsername(user.getUsername()) != null) throw new RuntimeException("Username was registered! Please register by other username");
         Random rand = new Random();
         int token = rand.nextInt();
-        String link = url + "/api/v1/register/confirm_register/" + token;
+        String link = url + "/api/v1/auth/register/confirm_register/" + token;
         mailService.sendMailRegister(user.getEmail(), link);
         user.setEnabled(false);
         user.setToken(token);
@@ -48,7 +48,7 @@ public class UserServicePortImpl implements UserServicePort {
         int token = rand.nextInt();
         User user = userDatabasePort.findByEmail(email);
         if (user == null) throw new SendFailedException("Invalid email or email does not exist");
-        String link = url + "/api/v1/forgot_password/confirm_password/" + token;
+        String link = url + "/api/v1/auth/forgot_password/confirm_password/" + token;
         user.setToken(token);
         userDatabasePort.updateToken(user);
         mailService.sendMailRegister(email, link);
@@ -56,27 +56,27 @@ public class UserServicePortImpl implements UserServicePort {
     }
 
     @Override
-    public String confirmPassword(int token, String password) {
+    public void confirmForgotPasswordToken(int token) {
         User user = userDatabasePort.findByToken(token);
-        if (user == null) throw new RuntimeException("Error happened");
+        if (user == null) throw new RuntimeException("The path to retrieve your password is no longer available") ;
+    }
+
+    @Override
+    public String createNewPassword(String password, int token) {
+        User user = userDatabasePort.findByToken(token);
         user.setPassword(password);
         userDatabasePort.updatePassword(user);
         return "UserEntity successfully change password";
     }
+
     @Override
     public User findUserByEmail(String email) {
-        return userDatabasePort.findUserByEmail(email);
-    }
-
-
-    @Override
-    public User createUser(User User) {
-        return userDatabasePort.createUser(User);
+        return userDatabasePort.findByEmail(email);
     }
 
     @Override
     public void updateRefreshToken(String token, String email) {
-        User currentUser = this.userDatabasePort.findUserByEmail(email);
+        User currentUser = this.userDatabasePort.findByEmail(email);
         if(currentUser != null){
             currentUser.setRefreshToken(token);
             this.userDatabasePort.updateUserRefreshToken(currentUser);
