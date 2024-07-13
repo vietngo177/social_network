@@ -1,9 +1,10 @@
 package com.ghtk.social_network.application.request;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 
 public class LoginRequest {
-    @NotBlank(message = "username khong duoc de trong")
+//    @NotBlank(message = "username khong duoc de trong")
     private String username;
 
     @NotBlank(message = "password khong duoc de trong")

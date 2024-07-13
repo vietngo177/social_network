@@ -20,7 +20,8 @@ public class GlobalException {
     @ExceptionHandler(value = {
             UsernameNotFoundException.class,
             BadCredentialsException.class,
-            IdInvalidException.class
+            IdInvalidException.class,
+            RuntimeException.class
     })
     public ResponseEntity<RestResponse<Object>> handleException(Exception ex) {
         RestResponse<Object> res = new RestResponse<>();

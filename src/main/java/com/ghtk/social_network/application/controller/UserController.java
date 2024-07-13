@@ -1,5 +1,6 @@
 package com.ghtk.social_network.application.controller;
 
+import com.ghtk.social_network.application.request.LoginRequest;
 import com.ghtk.social_network.application.request.RegisterRequest;
 import com.ghtk.social_network.domain.port.api.UserServicePort;
 import com.ghtk.social_network.util.mapper.UserMapper1;
@@ -44,9 +45,9 @@ public class UserController {
         return ResponseEntity.ok().body(result);
     }
 
-    @PostMapping("/confirm_password/{token}")
-    public ResponseEntity<String> confirmPassword(@PathVariable int token, @RequestBody String password){
-        return ResponseEntity.ok().body(userServicePort.confirmPassword(token, password));
+    @PostMapping("/forgot_password/confirm_password/{token}")
+    public ResponseEntity<String> confirmPassword(@PathVariable int token, @RequestBody LoginRequest loginRequest){
+        return ResponseEntity.ok().body(userServicePort.confirmPassword(token, loginRequest.getPassword()));
     }
 
 }
