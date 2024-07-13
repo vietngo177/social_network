@@ -1,14 +1,14 @@
 package com.ghtk.social_network.infrastracture.entity;
 
-
 import com.ghtk.social_network.util.constant.Visibility;
+import com.ghtk.social_network.domain.model.Gender;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -39,12 +39,15 @@ public class UserEntity {
     String lastName;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "visibility", nullable = false)
+    Gender gender;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "visibility")
     Visibility visibility;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)
-    RoleEntity roleEntity;
+    RoleEntity role;
 
     @Column(name = "bio")
     String bio;
@@ -58,7 +61,7 @@ public class UserEntity {
     @Column(name = "education")
     String education;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false)
     LocalDateTime createdAt;
 
     @Column(name = "updated_at")
@@ -69,9 +72,14 @@ public class UserEntity {
 
     @Column(name = "background_image")
     String backgroundImage;
+    @Column(name = "date_of_birth")
+    LocalDate dateOfBirth;
 
     @Column(columnDefinition = "MEDIUMTEXT")
     String refreshToken;
+
+    int token;
+    boolean enabled;
 
     @PrePersist
     protected void onCreate() {

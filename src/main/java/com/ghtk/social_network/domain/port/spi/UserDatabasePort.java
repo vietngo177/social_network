@@ -1,5 +1,7 @@
 package com.ghtk.social_network.domain.port.spi;
 
+
+import com.ghtk.social_network.domain.model.User;
 import com.ghtk.social_network.domain.model.UserDomain;
 
 public interface UserDatabasePort {
@@ -8,5 +10,15 @@ public interface UserDatabasePort {
     UserDomain updateUserRefreshToken(UserDomain userDomain);
 
     UserDomain findUserByRefeshTokenAndEmail(String token, String email);
+    void register(User user);
+
+    User findByToken(int token);
+
+    User findByEmail(String email);
+
+    User findByUsername(String username);
+
+    void updateRegisterUser(User user);
 
 }
+

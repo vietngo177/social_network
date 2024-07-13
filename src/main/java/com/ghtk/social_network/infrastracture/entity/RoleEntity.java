@@ -1,5 +1,6 @@
 package com.ghtk.social_network.infrastracture.entity;
 
+import com.ghtk.social_network.domain.model.Role;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,12 @@ public class RoleEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id", nullable = false)
     Long roleId;
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "role_name", nullable = false)
-    String roleName;
+    Role roleName;
+
+    public RoleEntity(Role roleName) {
+        this.roleName = roleName;
+    }
 }

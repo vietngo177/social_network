@@ -19,4 +19,6 @@ public class UserMapper {
         UserEntity userEntity = this.modelMapper.map(userDomain, UserEntity.class);
         return userEntity;
     }
+
+
 }
