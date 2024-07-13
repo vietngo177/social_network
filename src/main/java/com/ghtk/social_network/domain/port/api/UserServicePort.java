@@ -2,25 +2,16 @@ package com.ghtk.social_network.domain.port.api;
 
 
 import com.ghtk.social_network.application.request.ChangePasswordRequest;
-import com.ghtk.social_network.domain.exception.PasswordException;
-import com.ghtk.social_network.domain.model.User;
+import com.ghtk.social_network.exception.handler.PasswordException;
 import com.ghtk.social_network.domain.model.UserDomain;
-import jakarta.mail.MessagingException;
 import jakarta.mail.SendFailedException;
-import org.springframework.stereotype.Component;
 
 public interface UserServicePort {
     UserDomain findUserByEmail(String email);
     UserDomain createUser(UserDomain userDomain);
     void updateRefreshToken(String token, String email);
     UserDomain findUserByRefreshTokenAndEmail(String token, String email);
-    void register(String url, User user) throws MessagingException;
 
-    String confirmRegister(int token);
-
-    String forgotPassword(String url, String email) throws MessagingException;
-
-    String confirmPassword(int token, String password);
     String changePassword(String email, ChangePasswordRequest changePasswordRequest) throws SendFailedException, PasswordException;
 
     String deleteAccount(String email) throws SendFailedException;

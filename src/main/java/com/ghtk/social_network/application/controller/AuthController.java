@@ -2,11 +2,9 @@ package com.ghtk.social_network.application.controller;
 
 import com.ghtk.social_network.application.request.LoginRequest;
 import com.ghtk.social_network.application.response.LoginResponse;
-import com.ghtk.social_network.application.response.RestResponse;
-import com.ghtk.social_network.domain.exception.IdInvalidException;
+import com.ghtk.social_network.exception.handler.IdInvalidException;
 import com.ghtk.social_network.domain.model.UserDomain;
 import com.ghtk.social_network.domain.port.api.UserServicePort;
-import com.ghtk.social_network.infrastracture.entity.UserEntity;
 import com.ghtk.social_network.util.SecurityUtil;
 import com.ghtk.social_network.util.annotation.ApiMessage;
 import jakarta.validation.Valid;

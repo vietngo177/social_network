@@ -1,4 +1,4 @@
-package com.ghtk.social_network.domain.exception;
+package com.ghtk.social_network.exception.handler;
 
 public class PasswordException extends Exception{
     //Constructor that accepts a message

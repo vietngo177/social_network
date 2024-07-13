@@ -1,4 +1,4 @@
-package com.ghtk.social_network.domain.exception;
+package com.ghtk.social_network.exception.handler;
 
 public class IdInvalidException  extends Exception{
     //Constructor that accepts a message

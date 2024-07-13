@@ -1,8 +1,8 @@
 package com.ghtk.social_network.application.exception;
 
 import com.ghtk.social_network.application.response.RestResponse;
-import com.ghtk.social_network.domain.exception.IdInvalidException;
-import com.ghtk.social_network.domain.exception.PasswordException;
+import com.ghtk.social_network.exception.handler.IdInvalidException;
+import com.ghtk.social_network.exception.handler.PasswordException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
