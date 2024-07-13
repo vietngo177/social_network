@@ -7,8 +7,11 @@ import com.ghtk.social_network.domain.model.User;
 import com.ghtk.social_network.domain.port.api.UserServicePort;
 import com.ghtk.social_network.domain.port.spi.UserDatabasePort;
 import com.ghtk.social_network.util.MailService;
+import jakarta.mail.MessagingException;
 import jakarta.mail.SendFailedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Random;
 
 public class UserServicePortImpl implements UserServicePort {
     final private UserDatabasePort userDatabasePort;

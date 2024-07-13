@@ -7,8 +7,6 @@ import com.ghtk.social_network.application.request.RegisterRequest;
 import com.ghtk.social_network.application.response.LoginResponse;
 import com.ghtk.social_network.domain.model.User;
 import com.ghtk.social_network.exception.handler.IdInvalidException;
-import com.ghtk.social_network.exception.handler.IdInvalidException;
-import com.ghtk.social_network.domain.model.UserDomain;
 import com.ghtk.social_network.domain.port.api.UserServicePort;
 import com.ghtk.social_network.util.SecurityUtil;
 import com.ghtk.social_network.util.annotation.ApiMessage;

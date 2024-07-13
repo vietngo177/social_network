@@ -23,6 +23,7 @@ CREATE TABLE users (
                        refresh_token MEDIUMTEXT,
                         gender ENUM('MALE','FEMALE','OTHER'),
                         date_of_birth DATE,
+                        is_deleted BIT(1),
                        token INT,
                        enable BIT(1),
                        CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES roles(role_id)

@@ -78,11 +78,9 @@ public class UserEntity {
 
     @Column(name = "token")
     private Integer token;
+
     @Column(name = "is_deleted")
     boolean isDeleted;
-
-    int token;
-    boolean enabled;
 
     @Column(name = "enable")
     private boolean enable;

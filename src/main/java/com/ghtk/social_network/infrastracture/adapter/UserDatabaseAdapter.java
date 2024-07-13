@@ -68,7 +68,7 @@ public class UserDatabaseAdapter implements UserDatabasePort {
     }
 
     @Override
-    public UserDomain findUserByEmail(String email) {
+    public User findByEmail(String email) {
         UserEntity userEntity = userRepository.findByEmail(email);
         return userMapper.toUser(userEntity);
     }
