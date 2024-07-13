@@ -48,10 +48,10 @@ public class UserServicePortImpl implements UserServicePort {
         int token = rand.nextInt();
         User user = userDatabasePort.findByEmail(email);
         if (user == null) throw new SendFailedException("Invalid email or email does not exist");
-        String link = url + "/api/v1/auth/forgot_password/confirm_password/" + token;
+        String link = url + "/api/v1/auth/forgot_password/confirm_request/" + token;
         user.setToken(token);
         userDatabasePort.updateToken(user);
-        mailService.sendMailRegister(email, link);
+        mailService.sendMailForgetPassword(email, link);
         return "Please check your email to change your password.";
     }
 
@@ -66,7 +66,7 @@ public class UserServicePortImpl implements UserServicePort {
         User user = userDatabasePort.findByToken(token);
         user.setPassword(password);
         userDatabasePort.updatePassword(user);
-        return "UserEntity successfully change password";
+        return "User changed password successfully";
     }
 
     @Override

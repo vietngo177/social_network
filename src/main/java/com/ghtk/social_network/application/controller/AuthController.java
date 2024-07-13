@@ -199,7 +199,7 @@ public class AuthController {
         return ResponseEntity.ok().body(result);
     }
 
-    @PostMapping("/forgot_password/confirm_password/{token}")
+    @PostMapping("/forgot_password/confirm_request/{token}")
     public ResponseEntity<Void> confirmPassword(@PathVariable int token){
         userServicePort.confirmForgotPasswordToken(token);
         ResponseCookie responseCookie = ResponseCookie
