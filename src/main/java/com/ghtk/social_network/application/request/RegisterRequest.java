@@ -15,10 +15,10 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RegisterRequest {
     @NotBlank(message = "Username must not be empty")
-//    @Min(value = 6, message = "Username must contain 6 character at least")
+    @Size(min = 6, message = "Username must contain 6 character at least")
     String username;
 
-//    @Min(value = 8, message = "Password must contain 8 character at least")
+    @Size(min = 8, message = "Password must contain 8 character at least")
     @NotBlank(message = "Password must not be empty")
     String password;
 

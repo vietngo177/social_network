@@ -3,7 +3,7 @@ package com.ghtk.social_network.domain.port.api;
 import com.ghtk.social_network.domain.model.User;
 import jakarta.mail.MessagingException;
 import com.ghtk.social_network.application.request.ChangePasswordRequest;
-import com.ghtk.social_network.exception.handler.PasswordException;
+import com.ghtk.social_network.exception.customexception.PasswordException;
 import jakarta.mail.SendFailedException;
 
 public interface UserServicePort {
@@ -14,6 +14,7 @@ public interface UserServicePort {
     User findUserByRefreshTokenAndEmail(String token, String email);
 
     void register(String url, User user) throws MessagingException;
+
     String confirmRegister(int token);
 
     String changePassword(String email, ChangePasswordRequest changePasswordRequest)

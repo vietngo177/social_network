@@ -17,10 +17,10 @@ public class ChangePasswordRequest {
     private String oldPassword;
 
     @NotBlank(message = "The new password field is required")
-    @Size(min = 8)
+    @Size(min = 8, message = "Password must contain 8 characters at least")
     private String newPassword;
 
     @NotBlank(message = "The repeat password field is required")
-    @Size(min = 8)
+    @Size(min = 8, message = "Password must contain 8 characters at least")
     private String repeatPassword;
 }

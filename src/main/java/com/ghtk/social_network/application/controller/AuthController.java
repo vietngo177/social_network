@@ -6,7 +6,7 @@ import com.ghtk.social_network.application.request.LoginRequest;
 import com.ghtk.social_network.application.request.RegisterRequest;
 import com.ghtk.social_network.application.response.LoginResponse;
 import com.ghtk.social_network.domain.model.User;
-import com.ghtk.social_network.exception.handler.IdInvalidException;
+import com.ghtk.social_network.exception.customexception.IdInvalidException;
 import com.ghtk.social_network.domain.port.api.UserServicePort;
 import com.ghtk.social_network.util.SecurityUtil;
 import com.ghtk.social_network.util.annotation.ApiMessage;
@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -55,11 +56,12 @@ public class AuthController {
 
         LoginResponse res = new LoginResponse();
         User userCurrentDB = this.userServicePort.findUserByEmail(loginRequest.getEmail());
-        if (userCurrentDB != null) {
-            LoginResponse.UserLogin userLogin = new LoginResponse.UserLogin(userCurrentDB.getEmail(),
-                    userCurrentDB.getUsername());
-            res.setUser(userLogin);
+        if (userCurrentDB == null) {
+            throw new BadCredentialsException("credentials invalid");
         }
+
+        LoginResponse.UserLogin userLogin = new LoginResponse.UserLogin(userCurrentDB.getEmail(), userCurrentDB.getUsername());
+        res.setUser(userLogin);
 
         // Truyen thong tin dang nhap cua nguoi dung
         String access_token = this.securityUtil.createAccessToken(userCurrentDB.getEmail(), res.getUser());
@@ -158,7 +160,7 @@ public class AuthController {
     public ResponseEntity<Void> logout() throws IdInvalidException {
         String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
 
-        if (email.equals("")) {
+        if (email.isEmpty()) {
             throw new IdInvalidException("Access token khong hop le");
         }
 

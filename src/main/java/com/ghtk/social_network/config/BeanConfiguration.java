@@ -23,9 +23,4 @@ public class BeanConfiguration {
     public UserDatabasePort userDatabasePort(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, PasswordEncoder passwordEncoder){
         return new UserDatabaseAdapter(userRepository,roleRepository, userMapper, passwordEncoder);
     }
-
-    @Bean
-    MailService domainMailService(JavaMailSender mailSender) {
-        return new MailService(mailSender);
-    }
 }

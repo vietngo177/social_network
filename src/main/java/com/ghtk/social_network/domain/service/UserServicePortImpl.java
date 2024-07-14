@@ -2,7 +2,7 @@ package com.ghtk.social_network.domain.service;
 
 import com.ghtk.social_network.util.constant.Role;
 import com.ghtk.social_network.application.request.ChangePasswordRequest;
-import com.ghtk.social_network.exception.handler.PasswordException;
+import com.ghtk.social_network.exception.customexception.PasswordException;
 import com.ghtk.social_network.domain.model.User;
 import com.ghtk.social_network.domain.port.api.UserServicePort;
 import com.ghtk.social_network.domain.port.spi.UserDatabasePort;
@@ -16,7 +16,6 @@ import java.util.Random;
 public class UserServicePortImpl implements UserServicePort {
     final private UserDatabasePort userDatabasePort;
     final private MailService mailService;
-
     final private PasswordEncoder passwordEncoder;
 
     public UserServicePortImpl(UserDatabasePort userDatabasePort, MailService mailService,
@@ -104,7 +103,6 @@ public class UserServicePortImpl implements UserServicePort {
         if (user == null)
             throw new SendFailedException("Invalid email or email does not exist");
         userDatabasePort.deleteAccount(user);
-
         return "Deleted account successfully";
     }
 

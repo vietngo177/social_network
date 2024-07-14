@@ -1,6 +1,5 @@
 package com.ghtk.social_network.infrastracture.adapter;
 
-import com.ghtk.social_network.util.constant.Role;
 import com.ghtk.social_network.domain.model.User;
 import com.ghtk.social_network.domain.port.spi.UserDatabasePort;
 import com.ghtk.social_network.infrastracture.entity.RoleEntity;

@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 import java.util.Collections;
 
 @Component("userDetailsService")
-public class UserDetailsCustom implements UserDetailsService {
+public class CustomUserDetails implements UserDetailsService {
 
     private final UserServicePort userService;
 
-    public UserDetailsCustom(UserServicePort userService) {
+    public CustomUserDetails(UserServicePort userService) {
         this.userService = userService;
     }
 

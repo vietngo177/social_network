@@ -1,6 +1,8 @@
 package com.ghtk.social_network.exception.handler;
 
 import com.ghtk.social_network.application.response.RestResponse;
+import com.ghtk.social_network.exception.customexception.IdInvalidException;
+import com.ghtk.social_network.exception.customexception.PasswordException;
 import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,16 @@ public class GlobalExceptionHandle {
         er.setMessage("Error occur");
         er.setError(ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(er);
+    }
+
+    @ExceptionHandler(value = {PasswordException.class})
+    public ResponseEntity<RestResponse<Object>> handlingPasswordException(PasswordException ex) {
+        RestResponse<Object> res = new RestResponse<>();
+        res.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        res.setError(ex.getMessage());
+        res.setMessage("Exception occurs... ");
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
